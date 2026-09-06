@@ -1,1 +1,35 @@
-{% extends "base.html" %}{% block content %}<div class="card"><h1>Derecho Penal I</h1><p class="muted">Consulta de resultados académicos</p><form method="post"><label>Correo institucional</label><input name="email" type="email" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="CODIGO@UNAB.EDU.SV" required><button>INGRESAR</button></form></div><div class="card"><a href="/teacher/login">👨‍🏫 INGRESO DOCENTE</a></div>{% endblock %}
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card" style="max-width:650px;margin:35px auto">
+    <h1>Consulta de resultados</h1>
+
+    <p class="muted">
+        Ingrese su correo institucional para consultar sus calificaciones.
+    </p>
+
+    <form method="post">
+        <label>Correo institucional</label>
+
+        <input
+            name="email"
+            type="email"
+            autocomplete="off"
+            autocapitalize="characters"
+            spellcheck="false"
+            placeholder="CODIGO@UNAB.EDU.SV"
+            required
+        >
+
+        <button type="submit">
+            INGRESAR A MIS RESULTADOS
+        </button>
+    </form>
+</div>
+
+<div class="card" style="max-width:650px;margin:0 auto;text-align:center">
+    <a class="btn btn-gold" href="/teacher/login">
+        👨‍🏫 INGRESO DOCENTE
+    </a>
+</div>
+{% endblock %}
