@@ -1,1 +1,151 @@
-{% extends "base.html" %}{% block content %}<div class="card"><h1>{{st.last_name}} — {{st.first_name}}</h1><p class="muted">{{st.email}}</p><div class="tabs">{% for p,name in partials %}<a class="tab" href="#p{{p}}">{{name}}</a>{% endfor %}</div></div>{% for p,name in partials %}{% set g=grades|selectattr("partial","equalto",p)|first %}<div class="card" id="p{{p}}"><h2>{{name}}</h2><div class="grade">{{"%.2f"|format(g.grade)}}</div><p class="muted">Calificación reportada para este examen parcial.</p><h3>Prevenciones relacionadas a conducta, participación en clase, puntualidad y responsabilidad</h3><p>{{g.prevention or "Sin prevenciones registradas."}}</p><h2>⚖️ PRESENTACIÓN DE APELACIÓN EN CASO DE INCONFORMIDAD</h2><p>Explique brevemente el motivo de su inconformidad en caso considere la nota no sea a la que realmente corresponde.</p><form method="post" action="/appeal"><input type="hidden" name="partial" value="{{p}}"><textarea name="reason" rows="4" required></textarea><button>ENVIAR APELACIÓN</button></form></div>{% endfor %}<div class="card"><a href="/logout">Cerrar sesión</a></div>{% endblock %}
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+    <div class="student-head">
+
+        <div>
+            <h1 style="margin-bottom:5px">
+                {{st.last_name}} — {{st.first_name}}
+            </h1>
+
+            <div class="student-code">
+                {{st.email}}
+            </div>
+        </div>
+
+        <a class="btn" href="/logout">
+            Cerrar sesión
+        </a>
+
+    </div>
+
+    <div class="tabs" role="tablist">
+
+        {% for p,name in partials %}
+
+        <button
+            type="button"
+            class="tab {% if loop.first %}active{% endif %}"
+            data-tab="p{{p}}"
+        >
+            {{name}}
+        </button>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+{% for p,name in partials %}
+
+{% set g=grades|selectattr("partial","equalto",p)|first %}
+
+<section
+    class="card exam-panel {% if loop.first %}active{% endif %}"
+    id="p{{p}}"
+>
+
+    <h2>{{name}}</h2>
+
+
+    <div class="grade-box">
+
+        <div class="grade">
+            {{"%.2f"|format(g.grade)}}
+        </div>
+
+        <div class="grade-label">
+            Calificación reportada para este examen parcial
+        </div>
+
+    </div>
+
+
+    <div class="prevention">
+
+        <h3>
+            Prevenciones relacionadas a conducta, participación en clase, puntualidad y responsabilidad
+        </h3>
+
+        <p style="margin-bottom:0">
+            {{g.prevention or "Sin prevenciones registradas."}}
+        </p>
+
+    </div>
+
+
+    <div class="appeal">
+
+        <div class="appeal-title">
+            ⚖️ PRESENTACIÓN DE APELACIÓN EN CASO DE INCONFORMIDAD
+        </div>
+
+        <p>
+            Explique brevemente el motivo de su inconformidad en caso considere la nota no sea a la que realmente corresponde.
+        </p>
+
+        <form method="post" action="/appeal">
+
+            <input
+                type="hidden"
+                name="partial"
+                value="{{p}}"
+            >
+
+            <textarea
+                name="reason"
+                rows="5"
+                required
+                placeholder="Escriba aquí el motivo de su inconformidad..."
+            ></textarea>
+
+            <button type="submit">
+                ENVIAR APELACIÓN
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endfor %}
+
+
+<script>
+
+document.querySelectorAll('.tab').forEach(function(tab){
+
+    tab.addEventListener('click',function(){
+
+        document
+            .querySelectorAll('.tab')
+            .forEach(x => x.classList.remove('active'));
+
+        document
+            .querySelectorAll('.exam-panel')
+            .forEach(x => x.classList.remove('active'));
+
+        tab.classList.add('active');
+
+        document
+            .getElementById(tab.dataset.tab)
+            .classList.add('active');
+
+        window.scrollTo({
+            top: document.getElementById(tab.dataset.tab).offsetTop - 20,
+            behavior: 'smooth'
+        });
+
+    });
+
+});
+
+</script>
+
+{% endblock %}
