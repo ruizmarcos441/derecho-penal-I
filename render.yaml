@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: derecho-penal-i
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: TEACHER_PASSWORD
+        sync: false
