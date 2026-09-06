@@ -1,1 +1,203 @@
-{% extends "base.html" %}{% block content %}<div class="card"><h1>Panel docente — Derecho Penal I</h1><form method="get"><div class="row"><div><label>Estudiante</label><select name="code" onchange="this.form.submit()">{% for code,last,first in students %}<option value="{{code}}" {% if code==selected %}selected{% endif %}>{{code}} — {{last}} — {{first}}</option>{% endfor %}</select></div><div><label>Examen</label><select name="partial" onchange="this.form.submit()">{% for p,name in partials %}<option value="{{p}}" {% if p==partial %}selected{% endif %}>{{name}}</option>{% endfor %}</select></div></div></form></div>{% set g=grades|selectattr("partial","equalto",partial)|first %}<div class="card"><h2>{{st.last_name}} — {{st.first_name}}</h2><form method="post" action="/teacher/save"><input type="hidden" name="code" value="{{selected}}"><input type="hidden" name="partial" value="{{partial}}"><label>Nota (0 a 10)</label><input name="grade" type="number" min="0" max="10" step="0.01" value="{{'%.2f'|format(g.grade)}}"><label>Prevenciones relacionadas a conducta, participación en clase, puntualidad y responsabilidad</label><textarea name="prevention" rows="5">{{g.prevention}}</textarea><button>GUARDAR CAMBIOS</button></form></div><div class="card"><h2>⚖️ Apelaciones</h2>{% for a in appeals %}<div><p><b>Examen:</b> {{dict(partials)[a.partial]}}</p><p>{{a.reason}}</p><p><b>Estado:</b> {{a.status}}</p>{% if a.status=="PENDIENTE" %}<form method="post" action="/teacher/appeal/{{a.id}}"><button name="status" value="A LUGAR">A LUGAR</button> <button name="status" value="NO HA LUGAR">NO HA LUGAR</button></form>{% endif %}</div><hr>{% else %}<p>No hay apelaciones registradas para este estudiante.</p>{% endfor %}</div><div class="card"><a href="/logout">Cerrar sesión docente</a></div>{% endblock %}
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card">
+
+    <div class="student-head">
+
+        <div>
+            <h1>Panel docente</h1>
+
+            <p class="muted">
+                Administración de calificaciones, prevenciones y apelaciones
+            </p>
+        </div>
+
+        <a class="btn" href="/logout">
+            Cerrar sesión
+        </a>
+
+    </div>
+
+    <form method="get">
+
+        <div class="row">
+
+            <div>
+                <label>Estudiante</label>
+
+                <select name="code" onchange="this.form.submit()">
+
+                    {% for code,last,first in students %}
+
+                    <option
+                        value="{{code}}"
+                        {% if code==selected %}selected{% endif %}
+                    >
+                        {{code}} — {{last}} — {{first}}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+            <div>
+                <label>Examen parcial</label>
+
+                <select name="partial" onchange="this.form.submit()">
+
+                    {% for p,name in partials %}
+
+                    <option
+                        value="{{p}}"
+                        {% if p==partial %}selected{% endif %}
+                    >
+                        {{name}}
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</div>
+
+
+{% set g=grades|selectattr("partial","equalto",partial)|first %}
+
+
+<div class="card">
+
+    <h2>
+        {{st.last_name}} — {{st.first_name}}
+    </h2>
+
+    <form method="post" action="/teacher/save">
+
+        <input
+            type="hidden"
+            name="code"
+            value="{{selected}}"
+        >
+
+        <input
+            type="hidden"
+            name="partial"
+            value="{{partial}}"
+        >
+
+        <label>Nota (0 a 10)</label>
+
+        <input
+            name="grade"
+            type="number"
+            min="0"
+            max="10"
+            step="0.01"
+            value="{{'%.2f'|format(g.grade)}}"
+            required
+        >
+
+        <label>
+            Prevenciones relacionadas a conducta, participación en clase, puntualidad y responsabilidad
+        </label>
+
+        <textarea
+            name="prevention"
+            rows="5"
+            placeholder="Escriba las prevenciones, si corresponde..."
+        >{{g.prevention}}</textarea>
+
+        <button class="btn-green" type="submit">
+            GUARDAR CAMBIOS
+        </button>
+
+    </form>
+
+</div>
+
+
+<div class="card">
+
+    <h2>⚖️ Apelaciones del estudiante</h2>
+
+    {% for a in appeals %}
+
+    <div class="appeal-item">
+
+        <p>
+            <b>Examen:</b>
+            {{dict(partials)[a.partial]}}
+        </p>
+
+        <p>
+            {{a.reason}}
+        </p>
+
+        <p class="status {% if a.status=='PENDIENTE' %}pending{% else %}resolved{% endif %}">
+
+            <b>Estado:</b>
+            {{a.status}}
+
+        </p>
+
+        {% if a.status=="PENDIENTE" %}
+
+        <div class="teacher-tools">
+
+            <form
+                method="post"
+                action="/teacher/appeal/{{a.id}}"
+            >
+
+                <button
+                    class="btn-green"
+                    name="status"
+                    value="A LUGAR"
+                >
+                    A LUGAR
+                </button>
+
+            </form>
+
+
+            <form
+                method="post"
+                action="/teacher/appeal/{{a.id}}"
+            >
+
+                <button
+                    class="btn-red"
+                    name="status"
+                    value="NO HA LUGAR"
+                >
+                    NO HA LUGAR
+                </button>
+
+            </form>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+    {% else %}
+
+    <p class="muted">
+        No hay apelaciones registradas para este estudiante.
+    </p>
+
+    {% endfor %}
+
+</div>
+
+{% endblock %}
