@@ -1,1 +1,27 @@
-{% extends "base.html" %}{% block content %}<div class="card"><h2>Apelación recibida</h2><p>Su apelación ha sido enviada y se le resolverá en el término de ley.</p><a href="/logout">Finalizar</a></div>{% endblock %}
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card" style="max-width:700px;margin:45px auto;text-align:center">
+
+    <div style="font-size:58px">
+        ⚖️
+    </div>
+
+    <h1>
+        Apelación enviada
+    </h1>
+
+    <div class="notice">
+        Su apelación ha sido enviada y se le resolverá en el término de ley.
+    </div>
+
+    <br>
+
+    <a class="btn" href="/logout">
+        Finalizar
+    </a>
+
+</div>
+
+{% endblock %}
