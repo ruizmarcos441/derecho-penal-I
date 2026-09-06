@@ -1,1 +1,38 @@
-{% extends "base.html" %}{% block content %}<div class="card"><h1>👨‍🏫 INGRESO DOCENTE</h1><form method="post"><label>Contraseña</label><input type="password" name="password" autocomplete="current-password" required><button>INGRESAR</button></form><p><a href="/">Volver</a></p></div>{% endblock %}
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="card" style="max-width:520px;margin:45px auto">
+
+    <h1>👨‍🏫 INGRESO DOCENTE</h1>
+
+    <p class="muted">
+        Acceso reservado para la administración de Derecho Penal I.
+    </p>
+
+    <form method="post">
+
+        <label>Contraseña</label>
+
+        <input
+            type="password"
+            name="password"
+            autocomplete="current-password"
+            required
+        >
+
+        <button type="submit">
+            INGRESAR AL PANEL DOCENTE
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="/">
+        ← Volver al inicio
+    </a>
+
+</div>
+
+{% endblock %}
